@@ -44,38 +44,6 @@ nav img{
 }
 
 
-@media (max-width: 999px) {
-  body {
-    overflow-x: hidden;
-  }
-  #logo img{
-    width: 50px;
-    height: 50px;
-    padding: 10px 50px;
-    }
-  .nav-list {
-    position: absolute;
-    top: 20vh;
-    right: 0;
-    width: 50vw;
-    height: 50vh;
-    background: #13293D;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-    transform: translateX(100%);
-    transition: transform 0.3s ease-in;
-  }
-  .nav-list li {
-    margin-left: 0;
-    opacity: 0;
-    list-style: none;
-  }
-  .mobile-menu {
-    display: block;
-  }
-}
-
 .nav-list.active {
   transform: translateX(0);
 }
@@ -203,42 +171,16 @@ footer {
    .text button:hover{
     transition: 1s;
    }
-
-   @media (max-width: 768px) {
-    #main_home{
-      flex-direction: column-reverse;
-      height: 450px;
-    }
-    .conteudo{
+   .content_sencodary{
+      height: 70vh;
       width: 100%;
-      height: 50%;
     }
-    .text h1{
-      font-size: 1.8em;
-    }
-
-    .text p{
-      font-size: 0.8em;
-    }
-    .text button{
-      font-size: 1em;
-    }
-
-    .cartao{
-      width: 70%;
-      height: 70%;
-    }
-   }
-
    /*conteudos secundário da home*/
    .secondary-content{
-    width: 100%;
-    height: 400px;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     align-items: center;
-    flex-direction: column;  
     flex-wrap: wrap;
    }
 
@@ -259,11 +201,11 @@ footer {
      border: 2px solid white;
      cursor: pointer;
     }
-.texto-h2{
-  text-align: center;
-  padding-top: 30px;
-  font-size: 1.2em;
-}
+  .texto-h2{
+    text-align: center;
+    padding-top: 30px;
+    font-size: 1.2em;
+   }
 
 #conteudo_2{
   width: 100%;
@@ -577,4 +519,67 @@ button:hover {
   top: 0;
 }
 
-/**/
+/*Começo do medua query*/
+@media (max-width: 768px) {
+  #main_home{
+    flex-direction: column-reverse;
+    height: 450px;
+  }
+  .conteudo{
+    width: 100%;
+    height: 50%;
+  }
+  .text h1{
+    font-size: 1.8em;
+  }
+
+  .text p{
+    font-size: 0.8em;
+  }
+  .text button{
+    font-size: 1em;
+  }
+  .content_sencodary{
+    height: 180vh;
+    border: 1px solid red;
+    width: 100%;
+  }
+
+  .cartao{
+    width: 70%;
+    height: 70%;
+  }
+ }
+ @media (max-width: 999px) {
+  body {
+    overflow-x: hidden;
+  }
+  #logo img{
+    width: 50px;
+    height: 50px;
+    padding: 10px 50px;
+    }
+  .nav-list {
+    position: absolute;
+    top: 20vh;
+    right: 0;
+    width: 50vw;
+    height: 30vh;
+    background: #13293D;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in;
+  }
+  .nav-list li {
+    margin-left: 0;
+    opacity: 0;
+    list-style: none;
+  }
+  .mobile-menu {
+    display: block;
+  }
+}
+
+ /*Fim da media query*/
