@@ -50,5 +50,4 @@ setTimeout(function() {
   message.style.display = "none";
 }, 5000);
 
-/*Moldal*/
 

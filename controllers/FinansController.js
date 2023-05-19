@@ -6,9 +6,23 @@ const { Op } = require('sequelize')
 
 module.exports = class FinansController{
 
-  static showDashboard(req, res){
-    res.render('finans/dashboard')
+  static async showDashboard(req, res){
+    
+
+     //Trabalhando dashboard
+     const id = req.session.userid
+
+     const user = await User.findOne({ 
+      where: { id: id },
+      attributes: { exclude: ['password', 'email', 'createdAt', 'updatedAt'] },
+      plain: true,
+      raw: true,
+      });
+      console.log(user)
+     await res.render('finans/dashboard', {user})
+    
   }
+ 
 
   static showProhibited(req, res){
     res.render('finans/prohibited')
