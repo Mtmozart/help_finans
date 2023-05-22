@@ -3,8 +3,9 @@
     margin: 0;
     font-family: Helvetica;
     background-color: #13293D;
-    color: #E8F1F2;
+    color: #E8F1F2;   
 }
+
 /*Header*/
 nav {
   display: flex;
@@ -262,7 +263,7 @@ footer {
 
 /* LOGIN E REGISTER */
 .auth-container {
-  max-width: 450px;
+  max-width: 90%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -302,11 +303,13 @@ footer {
 }
 
 .form-control input,
+.form-control select,
 .form-control textarea {
   padding: 7px;
   border-radius: 3px;
   border: 1px solid #1B98E0;
 }
+
 
 form input[type='submit'],
 .btn {
@@ -342,6 +345,7 @@ form input[type='submit']:hover,
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 100;
 }
 /*Dashboard*/
 .contentDashboard{
@@ -404,17 +408,17 @@ align-content: center;
   border-radius: 20px;
   padding: 5px;
   margin: 0 auto;
-  
+ 
 }
 
 .container_prohibited tr, th{
   border-bottom: 1px solid #E8F1F2;
   border-right: 1px solid #E8F1F2;
-  height: 35px;
+  height: 5px;
 }
 
 .container_prohibited td{
-  padding: 10px;
+  padding: 5px;
   border-right: 1px solid #1B98E0;
   border-bottom: 1px solid #1B98E0;
 
@@ -424,10 +428,11 @@ align-content: center;
 /*formulário de adição*/ 
 
 .container_prohibited input,
-.container_prohibited textarea, select {
-  padding: 7px;
+.container_prohibited textarea{
+  padding: 5px;
   border-radius: 3px;
   border: none;
+  max-width: 200px;
  
 }
 
@@ -508,9 +513,13 @@ button:hover {
   .rectangle{
    height: 84%;
   }
- 
+  /*Tabela*/
+ .container_prohibited input {
+  padding: 0;
+  width: 40px;
  }
- @media (max-width: 999px) {
+ }
+ @media (max-width: 768px) {
   body {
     overflow-x: hidden;
   }

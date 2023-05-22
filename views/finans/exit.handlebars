@@ -1,26 +1,22 @@
-<div>
-  <div class="container_prohibited">
-    <div>
-      <h1>Saída</h1>
-      
-      <table>
-        <tr>         
-          <th>Título</th>
-          <th>Valor</th>
-          <th>Descrição</th>
-          <th>Categoria</th>
-          <th>Mês</th>    
-           <th>Ação</th>     
-        </tr>
-
-
-        <tr>
-          <form class="form-finans" action="/finans/exit" method="POST">
-          <td><input type="text" name="title" placeholder="Digite o título do gasto"></td>
-          <td><input type="text" name="value" placeholder="Digite o valor"></td>
-          <td><input type="text" name="description" placeholder="Digite a descrição"></td>
-          <td>
-          <select <select id="category" name="category">
+<section class="auth-container">
+    <h2>Saídas</h2>
+    <form id="form" action="/finans/exit" method="POST">
+        <div class="form-control">
+            <label for="text">Titulo</label>
+            <input type="text" name="title" placeholder="Digite o título do gasto">
+        </div>
+       <div class="form-control">
+            <label for="number">Valor</label>
+            <input type="text" name="value" placeholder="Digite o valor">
+        </div>
+           <div class="form-control">
+            <label for="text">Descrição</label>
+            <input type="text" name="description" placeholder="Digite a descrição">
+        </div>
+           
+         <div class="form-control">
+            <label for="number">Categoria</label>
+           <select id="category" name="category">
           <option value="">Por favor, escolha uma categoria.</option>
            <option value="saude">Saúde</option>
            <option value="lazer">Lazer</option>
@@ -28,10 +24,11 @@
            <option value="comida">Comida</option>
            <option value="outros">Outros</option>
         </select>
-          </td>
-          <td>
+           </div>
+         <div class="form-control">
+            <label for="select">Mês</label>
             <select id="month" name="month">
-          <option value="">Por favor, escolha um mês.</option>
+          <option value="">Mês</option>
            <option value="1">Janeiro</option>
            <option value="2">Fevereiro</option>
            <option value="3">Março</option> 
@@ -45,15 +42,14 @@
            <option value="11">Novembro</option>
            <option value="12">Dezembro</option>
         </select>
-          </td>
-          <td> 
-            <button type="submit" > <i class="fa-thin fa-plus"></i> </button>
-          </td>
-            </form>
-        </tr>
-     </table>    
-  </div>  
+        </div>
+      <input id="btn" type="submit" value="Cadastrar">          
+    </form>
 </div>
+</section>
+
+
+
 <section>
 <div>
   <h1>Pesquisa de saídas</h1>
