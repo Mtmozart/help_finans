@@ -11,7 +11,6 @@ router.get('/prohibited', checkAuth, FinansController.showProhibited);
 router.get('/all_prohibited', checkAuth, FinansController.showAllProhibited);
 router.post('/prohibited', checkAuth, FinansController.registerValues);
 //exit
-
 router.get('/exit', checkAuth, FinansController.showExit);
 router.post('/exit', checkAuth, FinansController.registerValuesExit);
 router.get('/all_exit', checkAuth, FinansController.showAllExit);

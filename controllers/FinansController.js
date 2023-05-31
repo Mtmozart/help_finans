@@ -10,17 +10,20 @@ module.exports = class FinansController{
     
 
      //Trabalhando dashboard
-     const id = req.session.userid
-
+     const id = req.session.userid 
+     
      const user = await User.findOne({ 
       where: { id: id },
       attributes: { exclude: ['password', 'email', 'createdAt', 'updatedAt'] },
       plain: true,
       raw: true,
       });
-      console.log(user)
+      try{
      await res.render('finans/dashboard', {user})
-    
+    }catch{
+      req.flash('message', 'Erro ao tentar acessar!')
+      res.redirect('/')
+    }
   }
  
 
@@ -153,17 +156,17 @@ static async showAllProhibited(req, res){
      })
 
 
-    let emptyProhibited = false
+    let empty = false
 
-    if(prohibiteds.length < 0) {
-      emptyProhibited = true
+    if(prohibiteds.length == 0) {
+      empty = true
       req.flash('message', 'Não há dados sobre este mês!')
       res.render('finans/prohibited')
     }
 
 
    const prohibited = prohibiteds.map((result) => result.dataValues)
-   res.render('finans/prohibited', { prohibited })
+   res.render('finans/prohibited', { prohibited, empty})
   }
 
   static removeProhibited(req, res) {
@@ -213,23 +216,20 @@ static async showAllProhibited(req, res){
        })
   
   
-      let emptyProhibited = false
+      let empty = false
   
-      if(exits.length < 0) {
-        emptyProhibited = true
+      if(exits.length == 0) {
+        empty = true
         req.flash('message', 'Não há dados sobre este mês!')
         res.render('finans/exit')
-      }
-  
+     }
      const exit = exits.map((result) => result.dataValues)
-     res.render('finans/exit', { exit })
-  
-    }
+     res.render('finans/exit', { exit,  empty })
+     }
 
     static removeExit(req, res) {
       const id = req.body.id
-      const userId = req.session.userid
-  
+      const userId = req.session.userid  
   
       Exit.destroy({
          where: {
@@ -252,7 +252,6 @@ static async showAllProhibited(req, res){
     }
 
     //Balance -----------------------------------
-
     
   static async showBalances(req, res){
     const userId = req.session.userid;  
@@ -268,7 +267,6 @@ static async showAllProhibited(req, res){
       const balance = await balances.map((result) => result.dataValues)
       await res.render('finans/balances', { balance })
     }   
-
   }
 
   static async showBalancesPost(req, res){
