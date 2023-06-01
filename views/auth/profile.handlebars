@@ -1,0 +1,31 @@
+<section>
+    <div>
+    <h1>Editação de dados de {{this.user.name}}</h1>
+  
+    <form id="form" action="/auth/edit" method="POST">
+    <input type="hidden" name="id" value={{user.id}}>
+    <div class="form-control">
+        <label for="text">Nome:</label>
+        <input id="name" type="name" name="name" value="{{user.name}}">
+    </div>
+    <div class="form-control">
+        <label for="email">E-mail:</label>
+        <input id="email" type="email" name="email" value="{{user.email}}">
+    </div>
+    <div class="form-control">
+        <label for="text">Telefone:</label>
+        <input id="phone" type="text" name="phone" value="{{user.phone}}">
+    </div>
+    <div class="form-control">
+        <label for="password">Alterar senha:</label>
+        <input id="password" type="password" name="password">
+    </div>
+    <div class="form-control">
+         <label for="confirmpassword">Confirmação de senha:</label>
+         <input id="confirmPassword" type="password" name="confirmpassword" placeholder="Confirme a sua senha">
+    </div>
+    <input id="btn" type="submit" value="Editar">
+</form>
+
+
+</section>

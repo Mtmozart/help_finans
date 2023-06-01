@@ -156,4 +156,127 @@ module.exports = class AuthController{
       })     
 
   } 
+
+  static async updatePost(req, res){
+    const id = req.body.id
+    const name = req.body.name
+    const email = req.body.email
+    const phone = req.body.phone
+    const password = req.body.password
+    const confirPassword = req.body.confirmpassword
+
+    if(!name){
+     req.flash('message', 'É obrigatório preencher o campo do nome!')
+     res.redirect(`/auth/profile/${id}`)
+     return
+    }
+    if(!email){
+     req.flash('message', 'É obrigatório preencher o campo do e-mail!')
+     res.redirect(`/auth/profile/${id}`)
+     return
+    }
+    /*Teste de checagem de e-mail*/ 
+    function checkIfEmailIsValid(email) {
+     //regex
+     const emailRegex = new RegExp(
+       
+       /^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-z]{2,}$/
+     );
+     if(emailRegex.test(email)){
+       return true
+     } return false
+   }
+   if(!checkIfEmailIsValid(email)){
+     req.flash('message', 'Por favor, insira um e-mail válido')
+     res.redirect(`/auth/edit/${id}`)
+     return
+   }
+    
+    if(!phone){
+     req.flash('message', 'É obrigatório preencher o campo do telefone')
+     res.redirect(`/auth/edit/${id}`)
+     return
+    }
+    if(!password){
+     req.flash('message', 'É obrigatório preencher o campo da senha!')
+     res.redirect(`/auth/edit/${id}`)
+     return
+    }
+   if (password.length < 7) {
+     req.flash('message', 'A senha dever ter no mínimo 7 caracteres.')
+     res.redirect(`/auth/edit/${id}`)
+     return
+   }    
+
+   const numbers = /([0 - 9])/;
+   const alphabet = /([a-zA-Z])/;
+   const chSpecial = /([~,!,@,#,$,%,^,&,*,-,_,+,=,?,>,<])/;
+  
+   if(!password.match(chSpecial) && !password.match(numbers) && !password.match(alphabet)){
+     req.flash('message', 'A senha é fraca, ela deve conter, letras, números e caracteres especiais!')
+     res.redirect(`/auth/edit/${id}`)
+     return
+   }  
+   
+    if(!confirPassword){
+     req.flash('message', 'É obrigatório preencher o campo de confirmação da senha')
+     res.redirect(`/auth/edit/${id}`)
+     return
+    }
+
+    if(password != confirPassword){
+     req.flash('message', 'As senhas são diferentes')
+     res.redirect(`/auth/edit/${id}`)
+     return
+    }  
+   const checkEmail = await User.findOne({where: {id: id, email: email}});
+
+   if(!checkEmail){
+    const checkEmailAll = await User.findOne({where: {email: email}});
+    if(checkEmailAll){
+      req.flash('message', 'O e-mail utilizado já foi cadastrado!')
+      res.redirect(`/auth/edit/${id}`)
+      return
+    }
+   }
+  
+   const salt = bcrypt.genSaltSync(10)
+   const hashedPassword = bcrypt.hashSync(password, salt)
+
+   const user = {
+     name,
+     email,
+     phone,
+     password: hashedPassword,
+   }   
+
+    
+  User.update(user, { where: { id: id } })
+      .then(() => {
+        req.flash('message', 'Dados atualizado com sucesso!')
+        req.session.save(() => {
+          res.redirect(`/auth/edit/${id}`)
+        })
+      })
+      .catch((err) => console.log(err))
+
+  }    
+   
+  static edit(req, res){
+    const id = req.params.id
+    if(id === null || id === null ){
+      req.flash('message', 'Usuário não encontrado')
+      res.redirect('/')
+    }
+
+    User.findOne({ where: { id: id }, raw: true })
+      .then((user) => {
+       if(user === null || user === undefined){
+        req.flash('message', 'Usuário não encontrado')
+        res.redirect('/')
+       }
+        res.render('auth/profile', { user })
+      })
+      .catch(() => res.redirect('/'))
+   }
 }

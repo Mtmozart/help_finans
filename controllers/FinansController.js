@@ -11,21 +11,17 @@ module.exports = class FinansController{
 
      //Trabalhando dashboard
      const id = req.session.userid 
-     
-     const user = await User.findOne({ 
-      where: { id: id },
-      attributes: { exclude: ['password', 'email', 'createdAt', 'updatedAt'] },
-      plain: true,
-      raw: true,
-      });
-      try{
-     await res.render('finans/dashboard', {user})
-    }catch{
-      req.flash('message', 'Erro ao tentar acessar!')
-      res.redirect('/')
-    }
-  }
- 
+
+     if(typeof id === 'number'){
+      const user = await User.findOne({ 
+        where: { id: id },
+        attributes: { exclude: ['password', 'email', 'createdAt', 'updatedAt'] },
+        plain: true,
+        raw: true,
+        });     
+       res.render('finans/dashboard', {user})      
+     }         
+  } 
 
   static showProhibited(req, res){
     res.render('finans/prohibited')
@@ -40,11 +36,13 @@ module.exports = class FinansController{
     res.render('finans/prohibited')
     return
     }
-    if(!value){
+   
+    if(!value || typeof value !== "number"){
       req.flash('message', 'É obrigatório preencher o campo do valor!')
       res.render('finans/prohibited')
       return
-      }
+     }
+
     if(!description){
     req.flash('message', 'É obrigatório preencher o campo da descrição!')
     res.render('finans/prohibited')
@@ -60,10 +58,14 @@ module.exports = class FinansController{
     res.render('finans/prohibited')
     return
       }
+     
+    
+   let checkValue = value.includes(",") ? parseFloat(value.replace(",", ".")) : value;
+
     
   const prohibited = {
     title, 
-    value, 
+    value: checkValue, 
     description, 
     category, 
     month,
@@ -94,11 +96,12 @@ static async registerValuesExit(req, res){
   res.render('finans/exit')
   return
   }
-  if(!value){
+  if(!value || typeof value !== "number"){
     req.flash('message', 'É obrigatório preencher o campo do valor!')
     res.render('finans/exit')
     return
-    }
+   }
+
   if(!description){
   req.flash('message', 'É obrigatório preencher o campo da descrição!')
   res.render('finans/exit')
@@ -114,10 +117,11 @@ static async registerValuesExit(req, res){
   res.render('finans/exit')
   return
     }
-  
+let checkValue =  value.includes(",") ? parseFloat(value.replace(",", ".")) : value;
+
 const exit = {
   title, 
-  value, 
+  value: checkValue, 
   description, 
   category, 
   month,

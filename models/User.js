@@ -18,10 +18,10 @@ const User = db.define("User", {
         allowNull: false,
         require: true,
   },
-  image: {
+  phone: {
     type: DataTypes.STRING,
-        allowNull: true,
-        require: false,
+        allowNull: false,
+        require: true,
   },
 });
 
