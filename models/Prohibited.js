@@ -10,9 +10,9 @@ const Prohibited = db.define("Prohibited", {
     require: true,
   },
   value: {
-    type: DataTypes.DOUBLE,
+    type: DataTypes.DECIMAL(10, 2),
     allowNull: false,
-    require: true,
+    required: true,
   }, 
   description: {
     type: DataTypes.STRING,

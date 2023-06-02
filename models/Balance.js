@@ -6,9 +6,9 @@ const User = require('./User');
 const Balance = db.define("Balance", {
   
   value: {
-    type: DataTypes.DOUBLE,
+    type: DataTypes.DECIMAL(10, 2),
     allowNull: false,
-    require: true,
+    required: true,
   }, 
 
   month: {

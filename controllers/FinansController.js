@@ -28,7 +28,7 @@ module.exports = class FinansController{
   }
 
   static async registerValues(req, res){
-    const {title, value, description, category, month }= req.body
+    const {title, description, value, category, month }= req.body
     const userId = req.session.userid
 
     if(!title){
@@ -36,12 +36,19 @@ module.exports = class FinansController{
     res.render('finans/prohibited')
     return
     }
-   
-    if(!value || typeof value !== "number"){
+    
+    let checkValue = value.includes(",") ? parseFloat(value.replace(",", ".")) : parseFloat(value);
+    
+    if(!checkValue || typeof checkValue !== "number"){
       req.flash('message', 'É obrigatório preencher o campo do valor!')
       res.render('finans/prohibited')
       return
-     }
+    }
+    if(isNaN(checkValue)){      
+      req.flash('message', 'Digite carcteres válidos')
+      res.render('finans/prohibited')
+      return
+    } 
 
     if(!description){
     req.flash('message', 'É obrigatório preencher o campo da descrição!')
@@ -60,7 +67,7 @@ module.exports = class FinansController{
       }
      
     
-   let checkValue = value.includes(",") ? parseFloat(value.replace(",", ".")) : value;
+   
 
     
   const prohibited = {
@@ -88,7 +95,7 @@ static showExit(req, res){
 }
 
 static async registerValuesExit(req, res){
-  const {title, value, description, category, month }= req.body
+  const {title, description, value, category, month }= req.body
   const userId = req.session.userid
 
   if(!title){
@@ -96,11 +103,18 @@ static async registerValuesExit(req, res){
   res.render('finans/exit')
   return
   }
-  if(!value || typeof value !== "number"){
+  let checkValue = value.includes(",") ? parseFloat(value.replace(",", ".")) : parseFloat(value);
+    
+  if(!checkValue || typeof checkValue !== "number"){
     req.flash('message', 'É obrigatório preencher o campo do valor!')
-    res.render('finans/exit')
+    res.render('finans/prohibited')
     return
-   }
+  }
+  if(isNaN(checkValue)){      
+    req.flash('message', 'Digite carcteres válidos')
+    res.render('finans/prohibited')
+    return
+  } 
 
   if(!description){
   req.flash('message', 'É obrigatório preencher o campo da descrição!')
@@ -117,7 +131,6 @@ static async registerValuesExit(req, res){
   res.render('finans/exit')
   return
     }
-let checkValue =  value.includes(",") ? parseFloat(value.replace(",", ".")) : value;
 
 const exit = {
   title, 
@@ -155,8 +168,7 @@ static async showAllProhibited(req, res){
       month: month,
       UserId: userId,
       }, 
-        //plain: true,
-         
+                
      })
 
 
@@ -264,127 +276,60 @@ static async showAllProhibited(req, res){
      where:{
      UserId: userId,
      },                
-    })
-    
-    if(balances.length > 0) {
-       
-      const balance = await balances.map((result) => result.dataValues)
-      await res.render('finans/balances', { balance })
-    }   
+    })   
+      
+    const balance = await balances.map((result) => result.dataValues)
+    await res.render('finans/balances', { balance })
+     
   }
 
-  static async showBalancesPost(req, res){
-   const userId = req.session.userid;    
-  
-  const balances = await Balance.findAll({
-    where:{
-    UserId: userId,
-    },                
-   })
+ static async showBalancesPost(req, res){
 
-  if(balances.length == 0) {
- 
-  const balance = {
-    value,
-    month: "",
+  const userId = req.session.userid;       
+  const count = await Balance.count({
+  where: {
     UserId: userId
   }
- 
-  for(let i = 0; i < 12; i++){
-    balance.month = months[i]
-    try {
-     const createdBalance =  await Balance.create(balance)
-     if(i == 11) {      
-      setTimeout(() => {
-        req.flash('message', 'Criado a base do seu balaço anual!')      
-        res.redirect('balances');
-      }, 3000);
-    }
-     } catch (error) {
-      req.flash('message', 'Erro ao realizar')      
-      res.render('balances')
-      console.log(error)  
-        }       
-      } 
-     } else {      
-      const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];  
-     
-      let month = 0;
-      let value = 0;
-      let statusUpdate = 0
-      for (var l = 0; l < 12; l++){
-        let month = months[l]; 
+});
 
-          const prohibiteds = await Prohibited.findAll({
-            where:{
-            month,
-            UserId: userId,
-            },                
-          }) 
+  if(count === 0){
+    // de criar
+  let month = 0  
+  let value = 0
 
-         
-          const prohibited = await prohibiteds.map((result) => result.dataValues);
-          const p = prohibited.length
-          let i = 0;
-          let prohibitedsValue = 0;
-          
-          while (i < p){
-          prohibitedsValue = prohibitedsValue + prohibited[i].value;
-          i++
-          }
-          //exit
-          const exits = await Exit.findAll({
-            where:{
-            month: month,
-            UserId: userId,
-            },           
-           })
-          const exit = exits.map((result) => result.dataValues);
-          let e = await exit.length;
-
-          let exitValue = 0;
-          let j = 0
-          while (j < e){    
-          exitValue = exitValue + exit[j].value
-          j++
-            }
-
-          const value = await prohibitedsValue - exitValue
-          
-          try {
-            const balance = {
-              value,
-              month,
-              UserId: userId
-            }
-          
-            const updateBalance = await Balance.update(balance, 
-              {
-                where: {
-                  month: month,
-                  UserId: userId
-                }
-            })
-            statusUpdate = 1
-              } catch (error) {
-               console.log(error) 
-               statusUpdate = 0 
-              }
-        }
-        if(statusUpdate === 1){
-          req.flash('message', 'Dados atualizados!')   
-          statusUpdate = 0    
-          res.redirect('balances')           
-         }else{
-          req.flash('message', 'Erro cadastrar!')      
-          res.redirect('balances')
-         }
-     }
+  const balance = {
+    UserId: userId,
+    month,
+    value,
   }
+  
+  for(let i = 0; i <= 11; i++){
+   balance.month =  balance.month + 1
+   const createdBalance =  await Balance.create(balance)
+   if(balance.month == 11){
+    req.flash('message', 'Criado a base do seu balaço anual!')      
+    res.redirect('balances');    
+   }    
+  }  
 
+  } /*Lógica do else*/  else {
+    let month = 1  
+    let value = 0
+       
+    
+   for(let j = 0; i <=11; i++){
+   const prohibiteds = await Prohibited.findAll({
+      where:{
+      month: month,
+      UserId: userId,
+      }, 
+        row: true,     
+     })
+    } 
+  }
  
- 
- }
+  }
+}
 
 
 
