@@ -331,6 +331,20 @@ form input[type='submit']:hover,
   background-color: #1B98E0;
   color: #fff;
 }
+/*Page 404*/
+.pg_404{
+  min-height: 500px;
+  padding: 50px;
+}
+.pg_404 a{
+ color: #1B98E0;
+ text-decoration: none;
+}
+.pg_404 a:hover{
+  color: #E8F1F2;
+  text-decoration: underline;
+ 
+ }
 /*Message*/
 .message{
   padding: 1em;

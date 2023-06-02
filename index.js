@@ -58,13 +58,18 @@ app.use((req, res, next) => {
      
      if (req.session.userid) {
      res.locals.session = req.session;
-    }
+    }    
      next();
   });
+
  //routes 
 app.use('/', publicRoutes)
 app.use('/auth', authRoutes)
 app.use('/finans', finansRoutes)
+//route 404
+app.use((req, res) => {
+  res.status(404).render('public/404');
+});
 
 
 conn
