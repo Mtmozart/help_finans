@@ -64,12 +64,7 @@ module.exports = class FinansController{
     req.flash('message', 'É obrigatório preencher o campo do mês!')
     res.render('finans/prohibited')
     return
-      }
-     
-    
-   
-
-    
+      }    
   const prohibited = {
     title, 
     value: checkValue, 
@@ -313,23 +308,84 @@ static async showAllProhibited(req, res){
   }  
 
   } /*Lógica do else*/  else {
-    let month = 1  
-    let value = 0
-       
+    let month = 1            
     
-   for(let j = 0; i <=11; i++){
+   for(let j = 0; j <=11; j++){
+    let sold = 0
+   //controle para total de entrada 
    const prohibiteds = await Prohibited.findAll({
       where:{
       month: month,
       UserId: userId,
-      }, 
-        row: true,     
-     })
-    } 
-  }
+      },     
+    })
+    
+    
+      const qtdP = prohibiteds.length;
+
+        let k = 1
+        for(k; k <= qtdP; k++) {
+            const prohibited = await prohibiteds.map((result) => result.value)
+
+              if(k = qtdP){
+                var totalValueProhibited = prohibited.reduce((total, value) => total + parseFloat(value), 0);
+                console.log('Aqui é o valor total: ' + totalValueProhibited);
+              }   
+        } 
+       //Controle para total de saída       
+      const exits = await Exit.findAll({
+      where:{
+      month: month,
+      UserId: userId,
+      },     
+      })   
+      const qtdE = exits.length;
+        let l = 0
+
+        for(l; l <= qtdE; l++) {
+          const exit = await exits.map((result) => result.value)
+
+            if(l = qtdE){
+              var totalValueExit = exit.reduce((total, value) => total + parseFloat(value), 0);
+              console.log('Aqui é o valor total de saída: ' + totalValueExit);
+       }        
+
+   } 
+    
+       //Trabalhando objeto da balance
+       //const sold = totalValueProhibited + totalValueExit
+       
+       sold  = totalValueProhibited - totalValueExit
+        
+       const balance = {
+        month: month,
+        value: sold,
+        UserId: userId,
+       }
+
+       await Balance.update(balance,
+        {
+          where:  {
+            month, month,
+            UserId: userId
+          }
+        }
+        )
+       .then(() => {
+        req.flash('message', 'Atualização feita com sucesso!')
+        res.redirect('/finans/balance')        
+      })
+      .catch((err) => {
+        req.flash('message', 'Deu ruim!')
+        res.redirect('/finans/balance')
+        
+      })
+
+    month = month + 1
+  }/*Fim do laço for maior  */
  
   }
 }
 
 
-
+}
