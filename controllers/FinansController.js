@@ -272,8 +272,12 @@ static async showAllProhibited(req, res){
      UserId: userId,
      },                
     })   
-      
+    if(balances.length === 0){
+      req.flash('message', 'Clique em atualizar para gerar sua primeira tabela')
+    }
     const balance = await balances.map((result) => result.dataValues)
+    
+   
     await res.render('finans/balances', { balance })
      
   }
@@ -307,56 +311,43 @@ static async showAllProhibited(req, res){
    }    
   }  
 
-  } /*Lógica do else*/  else {
+  }else {
     let month = 1            
     
    for(let j = 0; j <=11; j++){
     let sold = 0
+
    //controle para total de entrada 
    const prohibiteds = await Prohibited.findAll({
       where:{
       month: month,
       UserId: userId,
       },     
-    })
-    
-    
-      const qtdP = prohibiteds.length;
+    })   
+      
+  const totalValueProhibited = prohibiteds.reduce((total, result) => {
+    const prohibitedValue = parseFloat(result.value);
+    return total + prohibitedValue;
+  }, 0);
 
-        let k = 1
-        for(k; k <= qtdP; k++) {
-            const prohibited = await prohibiteds.map((result) => result.value)
-
-              if(k = qtdP){
-                var totalValueProhibited = prohibited.reduce((total, value) => total + parseFloat(value), 0);
-                console.log('Aqui é o valor total: ' + totalValueProhibited);
-              }   
-        } 
-       //Controle para total de saída       
-      const exits = await Exit.findAll({
-      where:{
-      month: month,
-      UserId: userId,
-      },     
-      })   
-      const qtdE = exits.length;
-        let l = 0
-
-        for(l; l <= qtdE; l++) {
-          const exit = await exits.map((result) => result.value)
-
-            if(l = qtdE){
-              var totalValueExit = exit.reduce((total, value) => total + parseFloat(value), 0);
-              console.log('Aqui é o valor total de saída: ' + totalValueExit);
-       }        
-
-   } 
-    
-       //Trabalhando objeto da balance
-       //const sold = totalValueProhibited + totalValueExit
        
+  //Controle para total de saída       
+   const exits = await Exit.findAll({
+          where:{
+          month: month,
+          UserId: userId,
+          },     
+      })   
+    
+    const totalValueExit=  exits.reduce((total, result) => {
+      const exitValue = parseFloat(result.value);
+      return total + exitValue;
+    }, 0);
+
+       let updateSuccess = false;
+       let messageUpdate = false
+       if( month === j + 1){          
        sold  = totalValueProhibited - totalValueExit
-        
        const balance = {
         month: month,
         value: sold,
@@ -371,21 +362,29 @@ static async showAllProhibited(req, res){
           }
         }
         )
+       
        .then(() => {
-        req.flash('message', 'Atualização feita com sucesso!')
-        res.redirect('/finans/balance')        
+        messageUpdate = true
+        updateSuccess = true
+              
       })
       .catch((err) => {
-        req.flash('message', 'Deu ruim!')
-        res.redirect('/finans/balance')
+       console.log(err)      
         
       })
-
+      //outro if para n quebrar
+      if(month === 12 &&  updateSuccess === true && j === 11 && messageUpdate === true){
+        req.flash('message', 'Atualização feita com sucesso!')
+        res.redirect('/finans/balances');
+      } else if(month === 12 &&  updateSuccess === false && j === 11  && messageUpdate === false){
+        req.flash('message', 'Deu ruim!')
+        res.redirect('/finans/balances');
+      }   
+    }
     month = month + 1
   }/*Fim do laço for maior  */
  
   }
 }
-
 
 }
