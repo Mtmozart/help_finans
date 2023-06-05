@@ -275,11 +275,9 @@ static async showAllProhibited(req, res){
     if(balances.length === 0){
       req.flash('message', 'Clique em atualizar para gerar sua primeira tabela')
     }
-    const balance = await balances.map((result) => result.dataValues)
-    
+    const balance = await balances.map((result) => result.dataValues)    
    
-    await res.render('finans/balances', { balance })
-     
+    await res.render('finans/balances', { balance })     
   }
 
  static async showBalancesPost(req, res){

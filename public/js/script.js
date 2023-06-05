@@ -44,10 +44,10 @@ const mobileNavbar = new MobileNavbar(
 mobileNavbar.init();
 
 /*Time de messagem*/
-const message = document.querySelector('.message');
+let message = document.querySelector('.message');
+if(message){
 
 setTimeout(function() {
   message.style.display = "none";
 }, 5000);
-
-
+}

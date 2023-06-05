@@ -50,12 +50,12 @@
 
 
 
-<section>
-<div>
-  <h1>Pesquisa de saídas</h1>
+<section class="auth-container">  
   <form action="/finans/all_exit" method="GET">
-         <select id="month_search" name="month_search">
-          <option value="">Por favor, escolha um mês.</option>
+          <div class="form-control">
+          <label for="select">Mês</label>         
+          <select id="month_search" name="month_search">         
+           <option value="">Por favor, escolha um mês.</option>
            <option value="1">Janeiro</option>
            <option value="2">Fevereiro</option>
            <option value="3">Março</option> 
@@ -69,11 +69,16 @@
            <option value="11">Novembro</option>
            <option value="12">Dezembro</option>
         </select>
+       </div>
           <button class="button_pesquisa" type="submit">Pesquisar</button>
   </form>
-</div>
-<div class="container_prohibited">
 
+<!--Seção da tabela-->
+</section>
+<section>
+<div class="container_prohibited">
+   
+  {{#if exit}}
  <table>
         <tr>         
           <th>Título</th>
@@ -97,6 +102,10 @@
         </tr>
           {{/each}}
      </table>
-
+     {{else}}
+     <div class="empty-datas">
+      <h3>Sem dados disponíveis.</h3>
+     </div>
+  {{/if}}
 </div>   
 </section>

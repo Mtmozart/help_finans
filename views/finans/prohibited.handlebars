@@ -48,12 +48,11 @@
 </div>
 </section>
 
-<section>
+<section class="auth-container">
 
-        
-<div>
-  <h1>Pesquisa de entradas</h1>
   <form action="/finans/all_prohibited" method="GET">
+          <div class="form-control">
+          <label for="select">Mês</label>     
          <select id="month_search" name="month_search">
           <option value="">Por favor, escolha um mês.</option>
            <option value="1">Janeiro</option>
@@ -69,15 +68,17 @@
            <option value="11">Novembro</option>
            <option value="12">Dezembro</option>
         </select>
+        </div>
           <button class="button_pesquisa" type="submit">Pesquisar</button>
   </form>
-</div>
+
 </section>
 
 
 <!--Seção da tabela-->
 
 <section>
+  {{#if prohibited}}
 <div class="container_prohibited">
  <table>
         <tr>         
@@ -103,5 +104,10 @@
           {{/each}}
      </table>
  
-</div>   
+</div> 
+{{else}} 
+   <div class="empty-datas">
+        <h3>Sem dados disponíveis.</h3>
+    </div>
+{{/if}}
 </section>
