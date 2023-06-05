@@ -11,3 +11,5 @@ Basta digitar clonar o repositório, instalar os plugins e digitar "npm start".
 - Conhecimento em NODE.js;
 - Eventlist e DOM;
 - Medyia Querie.
+###
+[![Nome do Vídeo](https://img.youtube.com/vi/TRXu4-Df9H4/0.jpg)](https://www.youtube.com/watch?v=TRXu4-Df9H4)
